@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: django csrf
+# key: {csrf}
+# --
+{% csrf_token %}
+$0

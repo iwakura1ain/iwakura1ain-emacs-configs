@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: @staticmethod
+# key: @staticmethod
+# --
+@staticmethod
+def ${1:name}(${2:args}):
+    $0

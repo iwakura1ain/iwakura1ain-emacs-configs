@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: new fucntion
+# key: function 
+# --
+
+function ${1:name}(${2:vars}) {
+    $0
+}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: log to console
+# key: log?
+# --
+console.log($0);

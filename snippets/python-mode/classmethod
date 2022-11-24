@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: @classmethod
+# key: @classmethod
+# --
+@classmethod
+def ${1:name}(cls, ${2:args}):
+    $0
