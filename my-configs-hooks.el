@@ -1,4 +1,6 @@
 ;;=========================== PACKAGE CONFIGURATION + CUSTOM HOOKS  =================================
+
+
 (add-hook 'global-mode-hook 'global-whitespace-mode -1)
 (add-hook 'global-mode-hook 'prettify-symbols-mode)
 
@@ -78,13 +80,29 @@
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
 
+;;dashboard
+(setq dashboard-items '((recents  . 8)
+                        (bookmarks . 8)))
+
 ;;enable python elpy, pyenv for python 
-(elpy-enable)
+;; (elpy-enable)
+;; (set-language-environment "UTF-8")
 
 (setq python-flymake-command '("/home/dks/.local/bin/flake8" "--config=/home/dks/.config/flake8" "-"))
 (setq python-check-command "/home/dks/.local/bin/flake8  --config=/home/dks/.config/flake8")
 (setq elpy-syntax-check-command python-check-command)
 
+
+;;enable anaconda-eldoc
+(add-hook 'anaconda-mode-hook 'anaconda-eldoc-mode)
+(add-hook 'anaconda-mode-hook (lambda ()
+				(prettify-symbols-mode)
+				(highlight-operators-mode)
+				(highlight-parentheses-mode)
+				(highlight-indentation-mode)
+				(highlight-numbers-mode)
+				(highlight-function-calls-mode)
+				(add-to-list 'company-backends 'company-anaconda)))
 
 
 ;;web-mode hook for html + css + js
@@ -109,6 +127,8 @@
 (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("pom.xml" . web-mode))
+
 
 
                                         ;(eval-after-load 'flycheck
@@ -126,22 +146,59 @@
 (setq company-tooltip-align-annotations t)
 
 ;;company backend configuration
-                                        ;web mode
+					;web mode
 (add-to-list 'company-backends 'company-web-html)
 (add-to-list 'company-backends 'company-web-jade)
 (add-to-list 'company-backends 'company-web-slim)
+(add-to-list 'company-backends 'company-capf)
+
+;;company-ispell in comments https://emacs.stackexchange.com/questions/54754/how-to-change-the-company-complete-backend-based-on-the-current-syntax
+;;
+;; (defun my-in-comment-p (pos)
+;;   "Check whether the code at POS is comment by comparing font face."
+;;   (let* ((fontfaces (get-text-property pos 'face)))
+;;     (if (not (listp fontfaces))
+;;         (setq fontfaces (list fontfaces)))
+;;     (delq nil
+;;           (mapcar #'(lambda (f)
+;;                       ;; learn this trick from flyspell
+;;                       (or (eq f 'font-lock-comment-face)
+;;                           (eq f 'font-lock-comment-delimiter-face)))
+;;                   fontfaces))))
+
+;; (eval-after-load 'company-ispell
+;;   '(progn
+;;      ;; use company-ispell in comment when coding
+;;      (defadvice company-ispell-available (around company-ispell-available-hack activate)
+;;        (cond
+;;         ((and (derived-mode-p 'prog-mode)
+;;               (or (not (company-in-string-or-comment)) ; respect advice in `company-in-string-or-comment'
+;;                   (not (my-in-comment-p (point))))) ; auto-complete in comment only
+;;          (setq ad-return-value nil))
+;;         (t
+;;          ad-do-it)))))
 
 
 ;;org mode
+(setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "red" :weight bold :height 1.2))
+	("UNSUBMITTED" . (:foreground "orange" :weight bold :height 1.2))
+	("IMPORTANT" . (:foreground "yellow" :weight bold :height 1.2))))
+
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'org-bullets-mode)
+(add-hook 'org-mode-hook ( lambda ()
+			   (prettify-symbols-mode)
+			   (highlight-numbers-mode)
+			   (highlight-operators-mode)
+			   (highlight-parentheses-mode)
+			   (setq org-cycle-separator-lines -1)
+                           (local-unset-key (kbd "M-j"))
+                           (local-unset-key (kbd "M-l"))
+                           (local-unset-key (kbd "M-k"))
+                           (local-unset-key (kbd "M-i"))))
 
-                                        ;tabnine AI autocomplete
-                                        ;(require 'company-tabnine)
-                                        ;(add-to-list 'company-backends 'company-tabnine)
 
-
-                                        ;auto-complete configuration
-                                        ;(global-auto-complete-mode nil)
 
 
 ;;dashboard
@@ -245,14 +302,29 @@
 ;;java lsp
 (require 'lsp-java)
 (add-hook 'java-mode-hook ( lambda ()
+			    (delete 'company-anaconda company-backends)
                             (local-unset-key (kbd "M-q"))
                             (local-unset-key (kbd "M-e"))
-                            (hs-minor-mode)
-                            (dap-mode -1)
+			    ;; (local-unset-key (kbd "M-j"))
+                            ;; (local-unset-key (kbd "M-k"))
+                            ;; (local-unset-key (kbd "M-l"))
+                            ;; (local-unset-key (kbd "M-i"))
                             (highlight-numbers-mode)
                             (highlight-operators-mode)
                             (highlight-function-calls-mode)
                             (face-remap-add-relative 'font-lock-type-face '(:height 1.2))))
+
+
+(defun company-remove-anaconda-backend ()
+  "add company-anaconda from company backends"
+  (interactive)
+  (add-to-list 'company-backends 'company-capf))
+
+
+(defun company-remove-anaconda-backend ()
+  "delete company-anaconda from company backends"
+  (interactive)
+  (delete 'company-anaconda company-backends))
 
 (add-hook 'java-mode-hook #'lsp)
 ;;(setenv "JAVA_HOME"  "path_to_java_folder/Contents/Home/")
@@ -270,13 +342,135 @@
 ;; (add-hook 'java-mode-hook #'lsp-javacomp-enable)
 
 
+;; (custom-set-variables
+;;  '(jdee-server-dir "/opt/jdee-server"))
+
+;;always split horizontally
+(setq split-width-threshold nil)
+
 (require 'ibuffer)
 (add-hook 'ibuffer-mode-hook ( lambda ()
-                               (local-unset-key (kbd "M-j"))
-                               (local-unset-key (kbd "M-l"))
-                               (local-unset-key (kbd "M-k"))
-                               (local-unset-key (kbd "M-i"))))
+			       (all-the-icons-ibuffer-mode)))
+
+
+(defun no-scroll-margin ()
+  "set scroll margain to 0 so the full window can be used"
+  (interactive)
+  (make-local-variable 'scroll-margin)
+  (setq scroll-margin 0))
+
+(add-hook 'shell-mode-hook
+	  ( lambda ()
+	    (make-local-variable 'scroll-margin)
+	    (setq scroll-margin 0)
+	    (anaconda-mode nil)))
+
+
+;;org blogging
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2013-10/msg00543.html
+(defun org-md-publish-to-md (plist filename org-export-publishing-directory)
+  "Publish an org file to Markdown.
+
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+
+Return output file name."
+  (org-publish-org-to 'md filename ".markdown" plist org-export-publishing-directory))
+
+;;org blogging https://orgmode.org/worg/org-tutorials/org-jekyll.html
+(setq org-publish-project-alist
+      '(
+	;; ("org-blog-export"
+        ;;  ;; Path to your org files.
+        ;;  :base-directory "/home/dks/Development/Blog/org"
+        ;;  :base-extension "org"
+
+        ;;  ;; Path to your Jekyll project.
+        ;;  :publishing-directory "/home/dks/Development/Blog/_posts"
+        ;;  :recursive t
+        ;;  :publishing-function org-html-publish-to-html
+        ;;  :headline-levels 4
+        ;;  :html-extension "html"
+        ;;  :body-only t ;; Only export section between <body> </body>
+	;;  )
+	("org-blog-export"
+	 :base-directory "/home/dks/Development/Blog/org"
+	 :base-extension "org"
+
+         ;; Path to your Jekyll project.
+         :publishing-directory "/home/dks/Development/Blog/_posts"
+         :publishing-function org-md-publish-to-md
+         :headline-levels 4
+         ;;:md-extension "markdown"
+         ;;:body-only t ;; Only export section between <body> </body>
+	 )
+	
+	
+	("org-blog-static-export"
+	 :base-directory "/home/dks/Development/Blog/org"
+	 :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+	 :publishing-directory "/home/dks/Development/Blog/assets"
+	 :recursive t
+	 :publishing-function org-publish-attachment)
+
+	("blog-export" :components ("org-blog-export" "org-blog-static-export"))
+	))
+
+
+;;ein integration 
+;; (add-hook 'ein:notebook-mode-hook ( lambda ()
+;; 				   (prettify-symbols-mode)
+;; 				   (highlight-numbers-mode)
+;; 				   (highlight-operators-mode)
+;; 				   (highlight-indentation-mode)
+;; 				   (highlight-parentheses-mode)
+;; 				   (undo-tree-mode)
+;; 				   (setq ein:output-area-inlined-images t)))
+
+(add-hook 'ein:notebooklist-mode-hook ( lambda ()
+				   (prettify-symbols-mode)
+		      		   (highlight-numbers-mode)
+				   (highlight-operators-mode)
+				   (highlight-indentation-mode)
+				   (highlight-parentheses-mode)))
+				
+(use-package ein
+  :defer t
+  :commands ein:notebooklist-open
+  :init
+  (progn
+    (with-eval-after-load 'ein-notebooklist
+      (undo-tree-mode))))
+
+
+
+;;global undo tree mode
+(global-undo-tree-mode)
+
+;;use shell path
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+(setq shell-command-switch "-ic")
+
+;; tramp use method 
+;; (use-package tramp
+;;   :ensure nil
+;;   :custom
+;;   (setq tramp-default-method "ssh"))'
+
+(eval-after-load 'tramp (lambda () (setq tramp-terminal-type "tramp")))
 
 
 (provide 'my-configs-hooks)
+
+
+
+
+
+
+
+
+
+
 

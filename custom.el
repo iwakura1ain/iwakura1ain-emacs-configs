@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu nil)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(company-global-modes nil)
@@ -45,6 +46,9 @@
  '(dired-sidebar-no-delete-other-windows t)
  '(dired-sidebar-theme 'none)
  '(dired-sidebar-width 25)
+ '(dynamic-completion-mode t)
+ '(ein:cell-traceback-level 5)
+ '(ein:output-area-inlined-images t)
  '(eldoc-echo-area-use-multiline-p t)
  '(eldoc-idle-delay 0.0)
  '(eldoc-minor-mode-string "el")
@@ -54,7 +58,7 @@
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-django elpy-module-autodoc elpy-module-sane-defaults))
  '(elpy-syntax-check-command
-   "/home/dks/.local/bin/flake8  --config=/home/dks/.config/flake8")
+   "/home/dks/.local/bin/flake8  --config=/home/dks/.config/flake8" t)
  '(flycheck-flake8rc "/home/dks/.config/flake8")
  '(flymake-no-changes-timeout 0.1)
  '(flymake-start-on-save-buffer t)
@@ -66,16 +70,16 @@
    '((10 buffer-read-only font-lock-constant-face)
      (15
       (and buffer-file-name
-           (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
+	   (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
       font-lock-doc-face)
      (20
       (string-match "^\\*"
-                    (buffer-name))
+		    (buffer-name))
       font-lock-variable-name-face)
      (25
       (and
        (string-match "^ "
-                     (buffer-name))
+		     (buffer-name))
        (null buffer-file-name))
       italic)
      (30
@@ -91,6 +95,7 @@
       ibuffer-locked-buffer)))
  '(ibuffer-use-other-window t)
  '(ido-default-buffer-method 'selected-window)
+ '(indent-tabs-mode t)
  '(indicate-buffer-boundaries
    '((t . right)
      (top . left)
@@ -98,7 +103,7 @@
      (up . left)
      (down . left)))
  '(jdee-global-classpath '("~/Development/Java/LearnJava"))
- '(jdee-server-dir "/opt/myJars")
+ '(jdee-server-dir "/opt/jdee-server")
  '(js2-idle-timer-delay 0.01)
  '(js2-missing-semi-one-line-override t)
  '(js2-mode-show-strict-warnings nil)
@@ -107,8 +112,9 @@
  '(my-contextual-help-mode t)
  '(next-line-add-newlines t)
  '(org-babel-python-command "/usr/bin/python3")
+ '(org-todo-keywords '((sequence "IMPORTANT" "TODO" "UNSUBMITTED" "DONE")))
  '(package-selected-packages
-   '(lsp-java company-emacs-eclim eclim java-imports java-snippets lsp-javacomp sudo-edit use-package all-the-icons-ibuffer major-mode-icons ibuffer-sidebar frame-tabs company-org-block ob-typescript org-inline-anim org-inline-pdf org-sidebar org-ac org-bullets avy dash dired-hacks-utils dired-subtree eldoc f gh git-commit highlight-indentation ht js2-refactor json-process-client json-snatcher logito lv magit-section makey markdown-mode marshal multiple-cursors parent-mode pcache pkg-info popup pythonic pyvenv s simple-httpd skewer-mode spinner transient typescript-mode web-completion-data with-editor yasnippet all-the-icons all-the-icons-dired dired-hide-dotfiles dired-icon smartparens tide company company-c-headers dashboard company-web dired-sidebar ac-html ac-html-csswatcher ac-js2 auto-complete django-snippets el-autoyas js-react-redux-yasnippets yasnippet-snippets flymake-eslint indium rjsx-mode lua-mode cython-mode flycheck-pycheckers jedi pyenv-mode elpy c-eldoc hl-prog-extra hl-block-mode emoji-fontset solaire-mode highlight-function-calls highlight-operators highlight-numbers yaml-mode web-mode lsp-ui lsp-mode json-mode js2-mode rainbow-mode elisp-slime-nav rainbow-delimiters counsel swiper ivy exec-path-from-shell zop-to-char zenburn-theme which-key volatile-highlights undo-tree super-save smartrep operate-on-number nlinum move-text magit projectile imenu-anywhere hl-todo guru-mode gitignore-mode gitconfig-mode git-timemachine gist flycheck expand-region epl editorconfig easy-kill diminish diff-hl discover-my-major crux browse-kill-ring anzu ag ace-window))
+   '(anaphora deferred polymode ein highlight-escape-sequences highlight-parentheses hl-anything hl-indent hl-sentence websocket zmq jupyter csv-mode anaconda-mode bind-key bui cfrs company-anaconda compat dap-mode hydra lsp-treemacs map org-ql org-super-agenda ov peg pfuture posframe powerline queue request treemacs ts yaml lsp-java lsp-docker ac-capf javadoc-lookup javaimp jtags company-emacs-eclim eclim java-imports java-snippets sudo-edit use-package all-the-icons-ibuffer major-mode-icons ibuffer-sidebar frame-tabs company-org-block ob-typescript org-inline-anim org-inline-pdf org-sidebar org-ac org-bullets avy dash dired-hacks-utils dired-subtree eldoc f gh git-commit highlight-indentation ht js2-refactor json-process-client json-snatcher logito lv magit-section makey markdown-mode marshal multiple-cursors parent-mode pcache pkg-info popup pythonic pyvenv s simple-httpd skewer-mode spinner transient typescript-mode web-completion-data with-editor yasnippet all-the-icons all-the-icons-dired dired-hide-dotfiles dired-icon smartparens tide company company-c-headers dashboard company-web dired-sidebar ac-html ac-html-csswatcher ac-js2 auto-complete django-snippets el-autoyas js-react-redux-yasnippets yasnippet-snippets flymake-eslint indium rjsx-mode lua-mode cython-mode flycheck-pycheckers jedi pyenv-mode c-eldoc hl-prog-extra hl-block-mode emoji-fontset solaire-mode highlight-function-calls highlight-operators highlight-numbers yaml-mode web-mode lsp-ui lsp-mode json-mode js2-mode rainbow-mode elisp-slime-nav rainbow-delimiters counsel swiper ivy exec-path-from-shell zop-to-char zenburn-theme which-key volatile-highlights undo-tree super-save smartrep operate-on-number nlinum move-text magit projectile imenu-anywhere hl-todo guru-mode gitignore-mode gitconfig-mode git-timemachine gist flycheck expand-region epl editorconfig easy-kill diminish diff-hl discover-my-major crux browse-kill-ring anzu ag ace-window))
  '(prelude-guru nil)
  '(prelude-whitespace nil)
  '(python-check-command
@@ -159,6 +165,9 @@
  ;; If there is more than one, they won't work right.
  '(dired-directory ((t (:foreground "turquoise2" :weight bold))))
  '(dired-header ((t (:foreground "tomato" :overline t :weight bold :height 1.2))))
+ '(ein:cell-output-area-error ((t nil)) t)
+ '(ein:cell-output-prompt ((((class color) (background light)) (:weight bold :foreground "red" (\,@ (when (>= emacs-major-version 27) '(:extend t))) nil)) (((class color) (background dark)) (:weight bold :foreground "red" (\,@ (when (>= emacs-major-version 27) '(:extend t))) nil))))
+ '(ein:cell-output-stderr ((((class color) (background light)) (:weight bold :foreground "red" (\,@ (when (>= emacs-major-version 27) '(:extend t))) nil)) (((class color) (background dark)) (:weight bold :foreground "red" (\,@ (when (>= emacs-major-version 27) '(:extend t))) nil))))
  '(eldoc-highlight-function-argument ((t (:inherit bold))))
  '(error ((t (:foreground "red" :slant italic :weight ultra-bold))))
  '(flycheck-error ((t (:underline (:color "orange red" :style wave)))))
@@ -185,6 +194,7 @@
  '(js2-function-param ((t (:foreground "rosy brown"))))
  '(js2-warning ((t (:underline (:color "gold" :style wave)))))
  '(org-level-1 ((t (:inherit default :extend nil :foreground "#DFAF8F" :height 1.4))))
+ '(org-level-2 ((t (:inherit default :extend nil :foreground "#BFEBBF" :height 1.2))))
  '(org-meta-line ((t (:foreground "tomato"))))
  '(org-todo ((t (:foreground "tomato" :weight bold :height 1.2))))
  '(rainbow-delimiters-base-face ((t (:inherit nil :foreground "honeydew1"))))
